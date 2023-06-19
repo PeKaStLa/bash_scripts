@@ -45,14 +45,25 @@ echo "Element at index $i: ${app_paths[i]}"
 	    echo "Das heißt dass ${app_names[i]} down ist!";
 	    was_down[i]="yes";
 
-
+	    tmux new-session -d -s ${app_names[i]};
+	    echo "Now start app: ${app_names[i]} again:";
+	    tmux send -t ${app_names[i]} "PORT=${app_ports[i]} /usr/bin/node ${app_paths[i]}/build/index.js" ENTER;
     fi
 
-    echo "";
+    echo "%%%%%%%%%%%%%%%%%%%%%%%%%%";
 done 
 
 
 for i in "${!was_down[@]}"
 do
 	echo "${app_names[i]} was down: ${was_down[i]}"
+	fuser_after=$(fuser ${app_ports[i]}/tcp)
+	#sleep 2;
+	#echo ""
+	#echo $fuser_after;
+	#echo ""
+	if [[ ! -z $fuser_after ]] then
+		echo "${app_names[i]} läuft aktuell, alles gut.";
+	fi
+
 done
