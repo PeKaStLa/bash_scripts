@@ -47,6 +47,9 @@ echo "Element at index $i: ${app_paths[i]}"
 
 	    tmux new-session -d -s ${app_names[i]};
 	    echo "Now start app: ${app_names[i]} again:";
+	    # test if i can kill tmux session without killing process.
+	    # test failed. node process gets also killed with '&'.
+	    #tmux send -t ${app_names[i]} "PORT=${app_ports[i]} /usr/bin/node ${app_paths[i]}/build/index.js &" ENTER;
 	    tmux send -t ${app_names[i]} "PORT=${app_ports[i]} /usr/bin/node ${app_paths[i]}/build/index.js" ENTER;
     fi
 
