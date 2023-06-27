@@ -1,0 +1,7 @@
+#!/usr/bin/php -peter -karl -stadler -pekastla
+# usage in shell with 
+# php php_3 -h -- foo
+#
+<?php
+var_dump($argv);
+?>

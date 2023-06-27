@@ -18,6 +18,20 @@
 # 3. send finish email, if at least 1 app was down
 #
 
+function EchoShellID()
+{
+	echo "current Shell: $$";
+}
+
+function ExitLastTmuxSession()
+{
+	tmux kill-session -t $1;
+}
+
+
+EchoShellID;
+
+
 # 1. create arrays for name, port and path
 
 app_names=("blog" "fewo")
@@ -44,18 +58,30 @@ echo "Element at index $i: ${app_paths[i]}"
 	    echo "${app_ports[i]} ist empty.";
 	    echo "Das heißt dass ${app_names[i]} down ist!";
 	    was_down[i]="yes";
+	    echo "-----exit last tmux session";
+	    ExitLastTmuxSession ${app_names[i]};
 
+	    echo "-----check tmux session creation";
 	    tmux new-session -d -s ${app_names[i]};
+	    if [ $? -eq 0 ]; then 
+		    echo "-----tmux new session succeeded"
+	    else
+		    echo "-----tmux new session failed"
+            fi
+
 	    echo "Now start app: ${app_names[i]} again:";
 	    # test if i can kill tmux session without killing process.
 	    # test failed. node process gets also killed with '&'.
 	    #tmux send -t ${app_names[i]} "PORT=${app_ports[i]} /usr/bin/node ${app_paths[i]}/build/index.js &" ENTER;
 	    tmux send -t ${app_names[i]} "PORT=${app_ports[i]} /usr/bin/node ${app_paths[i]}/build/index.js" ENTER;
+	    #tmux send -t ${app_names[i]} "exit";
     fi
 
     echo "%%%%%%%%%%%%%%%%%%%%%%%%%%";
 done 
 
+echo "nach der großen loop";
+EchoShellID;
 
 for i in "${!was_down[@]}"
 do
@@ -66,7 +92,7 @@ do
 	#echo $fuser_after;
 	#echo ""
 	if [[ ! -z $fuser_after ]] then
-		echo "${app_names[i]} läuft aktuell, alles gut.";
+		echo "${app_names[i]} läuft jetzt.";
 	fi
 
 done
