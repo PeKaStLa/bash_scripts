@@ -1,0 +1,27 @@
+date >> ram_usage ;free -m >> ram_usage ; echo   >> ram_usage
+ 
+Tue Jun 27 23:29:39 UTC 2023
+               total        used        free      shared  buff/cache   available
+Mem:            1956         309         370           8        1275        1456
+Swap:              0           0           0
+ 
+Tue Jun 27 23:29:40 UTC 2023
+               total        used        free      shared  buff/cache   available
+Mem:            1956         309         370           8        1275        1456
+Swap:              0           0           0
+ 
+Tue Jun 27 23:29:51 UTC 2023
+               total        used        free      shared  buff/cache   available
+Mem:            1956         309         370           8        1275        1456
+Swap:              0           0           0
+ 
+Thu Jun 29 11:02:24 UTC 2023
+               total        used        free      shared  buff/cache   available
+Mem:            1956         391         217           8        1346        1373
+Swap:              0           0           0
+
+Thu Jun 29 12:28:48 UTC 2023
+               total        used        free      shared  buff/cache   available
+Mem:            1956         340         272           8        1342        1424
+Swap:              0           0           0
+
