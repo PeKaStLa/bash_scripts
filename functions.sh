@@ -8,6 +8,8 @@
 #               by Peter Stadler                #
 #################################################
 #
+#8. NpmRunBuild()
+#7. GitPull()
 #6. EchoEyeCatcher()
 #5. CheckIfDollar1Exists()
 #4. IsPortFree()
@@ -19,8 +21,24 @@
 ###############################################################################
 ###############################################################################
 ###############################################################################
+#8. NpmRunBuild()
+##################
+
+NpmRunBuild()
+{
+    CheckIfDollar1Exists $1 || return 1; #$1 needs a repo/project-name
+    /usr/bin/npm run --prefix /home/ec2-user/$1 build;
+}
 
 ###############################################################################
+#7. GitPull()
+##############
+
+GitPull()
+{
+    CheckIfDollar1Exists $1 || return 1; #$1 needs a repo/project-name
+    /usr/bin/git -C /home/ec2-user/$1 pull;
+}
 
 ###############################################################################
 #6. EchoEyeCatcher()
@@ -96,17 +114,16 @@ IsLocalRepoUpToDate()
 ExitIfCodeIsNot0()
 {
     if [[ "$?" -eq 0 ]] then
-        echo "Exit code ist 0 :)";
+        echo "Exit code is 0, good :)";
         return 0; #yes, last command worked
     else
-        echo "Exit code ist 1 :(";
-        exit; 
-        #return 1; #no, last command didnt worked
+        echo "Exit code is not 0, bad :(";
+        exit;  #because last command didnt worked
     fi
 }
 
 ###############################################################################
-
+#####
 
 
 
