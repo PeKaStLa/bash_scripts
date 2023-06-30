@@ -78,8 +78,9 @@ EchoPortFuser()
 
 IsLocalRepoUpToDate()
 {
-    git_local_hash=$(cd /home/ec2-user/blog && /usr/bin/git rev-parse HEAD);
-    git_remote_hash=$(cd /home/ec2-user/blog && /usr/bin/git ls-remote --head | cut -f1);
+    CheckIfDollar1Exists $1 || return 1; #$1 needs a repo/project-name
+    git_local_hash=$(/usr/bin/git -C ~/$1 rev-parse HEAD);
+    git_remote_hash=$(/usr/bin/git -C ~/$1 ls-remote --head | cut -f1);
 
     if [[ $git_local_hash = $git_remote_hash ]] then
         return 0; #yes, local and remote the same. local commit is up-to-date
