@@ -1,24 +1,80 @@
 #/bin/bash
 #
 #################################################
-#               functions.sh			#
-# 	This file shall not be executed.	#
-# 	Only imported into other shell scripts.	#
-#		29.06.2023 - 18:27		#
-#		by Peter Stadler		#
+#               functions.sh                    #
+#       This file shall not be executed.        #
+#       Only imported into other shell scripts. #
+#               29.06.2023 - 18:27              #
+#               by Peter Stadler                #
 #################################################
+#
+#6. EchoEyeCatcher()
+#5. CheckIfDollar1Exists()
+#4. IsPortFree()
+#3. EchoPortFuser()
+#2. IsLocalRepoUpToDate()
+#1. ExitIfCodeIsNot0()
 
 
+###############################################################################
+###############################################################################
+###############################################################################
 
+###############################################################################
 
+###############################################################################
+#6. EchoEyeCatcher()
+#####################
 
+EchoEyeCatcher()
+{
+	# echo $1 Parameter in red font on cyan background!
+    echo -e '\E[31;46m' ; echo "$1"; tput sgr0;
+}
 
+###############################################################################
+#5. CheckIfDollar1Exists()
+###########################
 
+CheckIfDollar1Exists()
+{
+    if [[ ! -z $1 ]] then
+        return 0; #yes, $1 exists
+    else
+        EchoEyeCatcher "ERROR - Dollar 1 doesnt exist! $1";
+        return 1; #no, $1 doesnt exist
+    fi
+}
 
+###############################################################################
+#4. IsPortFree()
+#################
 
+IsPortFree()
+{
+    CheckIfDollar1Exists $1 || return 1; #$1 needed a port
+    fuser=$(/usr/sbin/fuser $1/tcp); #check if port is used by a process
+    if [[ -z $fuser ]] then
+        return 0; #yes, port is free because fuser output is empty
+    elif [[ ! -z $fuser ]] then
+        return 1; #no, port is not free because fuser output is not empty
+    fi
+}
 
+###############################################################################
+#3. EchoPortFuser()
+####################
 
+EchoPortFuser()
+{
+    CheckIfDollar1Exists $1 || return 1; #$1 needed a port
+    fuser=$(/usr/sbin/fuser $1/tcp);
+    echo $fuser;
+}
 
+###############################################################################
+#2. IsLocalRepoUpToDate()
+##############################
 
 IsLocalRepoUpToDate()
 {
@@ -32,55 +88,23 @@ IsLocalRepoUpToDate()
     fi
 }
 
+################################################################################
+#1. ExitIfCodeIsNot0()
+#########################
 
 ExitIfCodeIsNot0()
 {
     if [[ "$?" -eq 0 ]] then
-        echo "Exit code ist 0";
-        #return 0; #yes, last command worked
+        echo "Exit code ist 0 :)";
+        return 0; #yes, last command worked
     else
-        echo "Exit code ist 1";
+        echo "Exit code ist 1 :(";
         exit; 
         #return 1; #no, last command didnt worked
     fi
-    
 }
 
-
-
-
-
-
-CheckIfDollar1Exists()
-{
-    if [[ ! -z $1 ]] then
-        #echo "dollar 1 exists: $1"
-        return 0; #yes, $1 exists
-    else
-        echo "dollar 1 doesnt exist: $1";
-        return 1; #no, $1 doesnt exist
-        #exit;
-    fi
-}
-
-
-IsPortFree()
-{
-        CheckIfDollar1Exists $1; #$1 is needed as port
-        fuser=$(/usr/sbin/fuser $1/tcp); #check if port is used by a process 
-        if [[ -z $fuser ]] then
-                return 0; #yes, port is free because fuser output is empty
-        elif [[ ! -z $fuser ]] then
-                return 1; #no, port is busy because fuser output is not empty
-        fi
-}
-
-EchoPortFuser()
-{
-        CheckIfDollar1Exists $1; #$1 is needed as port
-        fuser=$(/usr/sbin/fuser $1/tcp);
-        echo $fuser;
-}
+###############################################################################
 
 
 
