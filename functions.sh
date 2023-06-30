@@ -29,7 +29,7 @@
 EchoEyeCatcher()
 {
 	# echo $1 Parameter in red font on cyan background!
-    echo -e '\E[31;46m' ; echo "$1"; tput sgr0;
+    echo -e '\E[37;41m' "$1"; tput sgr0;
 }
 
 ###############################################################################

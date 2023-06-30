@@ -18,6 +18,8 @@
 # 3. send finish email, if at least 1 app was down
 #
 
+source ~/scripts/functions.sh;
+
 function EchoShellID()
 {
 	echo "current Shell: $$";
@@ -43,6 +45,7 @@ was_down=("no" "no")
 
 for ((i=0; i<${#app_names[@]}; i++))
 do
+	EchoEyeCatcher "Now in the big FOR-loop";
     # Access array element using the loop index
     echo "Element at index $i: ${app_names[i]}"
 
@@ -55,6 +58,7 @@ echo "Element at index $i: ${app_paths[i]}"
     echo $fuser_before;
 	
     if [[ -z $fuser_before ]] then
+	    EchoEyeCatcher "Now in the big IF";
 	    echo "${app_ports[i]} ist empty.";
 	    echo "Das heißt dass ${app_names[i]} down ist!";
 	    was_down[i]="yes";
