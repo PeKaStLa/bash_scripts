@@ -28,25 +28,26 @@ PullBuildTmuxDeploy()
 {
     CheckIfDollarExists "Repo-name is missing in 'PullBuildTmuxDeploy()'"  $1 || return 1;
     #$1 needs a repo-name
+    
     CheckIfDollarExists "Port is missing in 'PullBuildTmuxDeploy()'"  $2 || return 1;
     #$2 needs a port
+    
+    IsLocalRepoUpToDate $1 && return 1;
 
     #git pull 
-    /usr/bin/git -C /home/ec2-user/$1 pull;
+    /usr/bin/git -C /home/ec2-user/$1 pull || return 1;
     #npm run build
-    /usr/bin/npm run --prefix /home/ec2-user/$1 build;
+    /usr/bin/npm run --prefix /home/ec2-user/$1 build || return 1;
     #tmux kills old session
     /usr/bin/tmux kill-session -t $1;
     #tmux new session
-    /usr/bin/tmux new-session -ds $1;
+    /usr/bin/tmux new-session -ds $1 || return 1;
     #tmux send deploy to session
-    tmux send -t $1 "PORT=$2 /usr/bin/node ~/$1/build/index.js" ENTER;
+    tmux send -t $1 "PORT=$2 /usr/bin/node ~/$1/build/index.js" ENTER || return 1;
     #sleep 2 and check for fuser am Port
     sleep 2;
-    EchoPortFuser $2;
+    EchoPortFuser $2 || return 1;
 }
-
-###############################################################################
 
 ###############################################################################
 #6. EchoEyeCatcher() $1=text to be echoed
@@ -132,7 +133,7 @@ ExitIfCodeIsNot0()
         echo "Exit code is 0, good :)";
         return 0; #yes, last command worked
     else
-        echo "Exit code is not 0, bad :(";
+        echo "Exit code is not 0, bad :(. Exit now.";
         exit;  #because last command didnt worked
     fi
 }
