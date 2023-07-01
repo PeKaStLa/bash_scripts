@@ -9,19 +9,42 @@
 #################################################
 #
 #
-#9. SendFileSNS() $1=filename
-#8. TmuxDeployNode() $1=repo, $2=port
-#7. PullBuildNode() $1=repo
-#6. EchoEyeCatcher() $1=text to be echoed
-#5. CheckIfDollarExists() $1=error-message, $2=port or repo to be checked)
-#4. IsPortFree() $1=port
-#3. EchoPortFuser() $1=port
-#2. IsLocalRepoUpToDate() $1=repo-name
-#1. ExitIfCodeIsNot0()
+#
+#10. SendTextSNS() $1=message-text
+#9.  SendFileSNS() $1=filename
+#8.  TmuxDeployNode() $1=repo, $2=port
+#7.  PullBuildNode() $1=repo
+#6.  EchoEyeCatcher() $1=text to be echoed
+#5.  CheckIfDollarExists() $1=error-message, $2=port or repo to be checked)
+#4.  IsPortFree() $1=port
+#3.  EchoPortFuser() $1=port
+#2.  IsLocalRepoUpToDate() $1=repo-name
+#1.  ExitIfCodeIsNot0()
 
 ###############################################################################
 ###############################################################################
 ###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+
+
+
+###############################################################################
+#10. SendTextSNS() $1=message-text
+###############################
+
+SendTextSNS()
+{
+        CheckIfDollarExists "Message-text is missing in 'SendTextSNS()'"  $1 || return 1;
+        #$1 needs a message-text
+
+        aws sns publish --topic-arn arn:aws:sns:eu-central-1:617485513502:send_files_for_archiv --message "$1";
+        echo "Message $1 wurde in E-Mail gesendet.";
+}
+
 ###############################################################################
 #9. SendFileSNS() $1=filename
 ###############################
@@ -29,7 +52,7 @@
 SendFileSNS()
 {
 	CheckIfDollarExists "Filename is missing in 'SendFileSNS()'"  $1 || return 1;
-    	#$1 needs a repo-name
+    	#$1 needs a file-name
 	
 	message=$(< $1);
         aws sns publish --topic-arn arn:aws:sns:eu-central-1:617485513502:send_files_for_archiv --message "$message";
@@ -39,7 +62,6 @@ SendFileSNS()
 ###############################################################################
 #8. TmuxDeployNode() $1=repo, $2=port
 ######################################
-
 
 TmuxDeployNode()
 {
@@ -58,7 +80,6 @@ TmuxDeployNode()
     sleep 2;
     EchoPortFuser $2 || return 1;
 }
-
 
 ###############################################################################
 #7. PullBuildNode() $1=repo
@@ -88,9 +109,7 @@ EchoEyeCatcher()
 }
 
 ###############################################################################
-
-###############################################################################
-#5. CheckIfDollarExists() $1=error-message, $2=port or repo to be checked)
+#5. CheckIfDollarExists() $1=error-message, $2=port or repo to be checked
 ############################
 
 CheckIfDollarExists()
