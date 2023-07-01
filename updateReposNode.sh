@@ -20,8 +20,7 @@ declare  -r ports=(3010 3011);
 for ((i=0; i<${#repos[@]}; i++))
 do
     echo "-------Now update ${repos[i]} on port ${ports[i]}";
-    PullBuildNode ${repos[i]};
-    TmuxDeployNode ${repos[i]} ${ports[i]};
+    PullBuildNode ${repos[i]} && TmuxDeployNode ${repos[i]} ${ports[i]};
 done
 
 
