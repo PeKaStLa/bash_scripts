@@ -18,6 +18,8 @@
 # 3. send finish email, if at least 1 app was down
 #
 
+# CHECK DEN PORT ZUERST!!! NUR DEPLOYEN; WENN PORT FREI IST: SONST WÄRE ES UNNÖTIG!!	
+
 source ~/scripts/functions.sh;
 
 function EchoShellID()

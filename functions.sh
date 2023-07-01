@@ -9,8 +9,8 @@
 #################################################
 #
 #
-#
-#7. PullBuildTmuxDeploy() $1=repo, $2=port
+#8. TmuxDeployNode() $1=repo, $2=port
+#7. PullBuildTmuxDeployNode() $1=repo
 #6. EchoEyeCatcher() $1=text to be echoed
 #5. CheckIfDollarExists() $1=error-message, $2=port or repo to be checked)
 #4. IsPortFree() $1=port
@@ -18,27 +18,23 @@
 #2. IsLocalRepoUpToDate() $1=repo-name
 #1. ExitIfCodeIsNot0()
 
-
 ###############################################################################
 ###############################################################################
-#7. PullBuildTmuxDeploy() $1=repo, $2=port
-##########################
+###############################################################################
+###############################################################################
+###############################################################################
+#8. TmuxDeployNode() $1=repo, $2=port
+######################################
 
-PullBuildTmuxDeploy()
+
+TmuxDeployNode()
 {
-    CheckIfDollarExists "Repo-name is missing in 'PullBuildTmuxDeploy()'"  $1 || return 1;
+    CheckIfDollarExists "Repo-name is missing in 'TmuxDeployNode()'"  $1 || return 1;
     #$1 needs a repo-name
-    
-    CheckIfDollarExists "Port is missing in 'PullBuildTmuxDeploy()'"  $2 || return 1;
+    CheckIfDollarExists "Port is missing in 'TmuxDeployNode()'"  $2 || return 1;
     #$2 needs a port
     
-    IsLocalRepoUpToDate $1 && return 1;
-
-    #git pull 
-    /usr/bin/git -C /home/ec2-user/$1 pull || return 1;
-    #npm run build
-    /usr/bin/npm run --prefix /home/ec2-user/$1 build || return 1;
-    #tmux kills old session
+    #tmux kill old session
     /usr/bin/tmux kill-session -t $1;
     #tmux new session
     /usr/bin/tmux new-session -ds $1 || return 1;
@@ -47,6 +43,24 @@ PullBuildTmuxDeploy()
     #sleep 2 and check for fuser am Port
     sleep 2;
     EchoPortFuser $2 || return 1;
+}
+
+
+###############################################################################
+#7. PullBuildNode() $1=repo
+##########################
+
+PullBuild()
+{
+    CheckIfDollarExists "Repo-name is missing in 'PullBuildTmuxDeploy()'"  $1 || return 1;
+    #$1 needs a repo-name
+    
+    IsLocalRepoUpToDate $1 && return 1;
+
+    #git pull 
+    /usr/bin/git -C /home/ec2-user/$1 pull || return 1;
+    #npm run build
+    /usr/bin/npm run --prefix /home/ec2-user/$1 build || return 1;
 }
 
 ###############################################################################
