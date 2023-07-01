@@ -10,7 +10,7 @@
 #
 #
 #8. TmuxDeployNode() $1=repo, $2=port
-#7. PullBuildTmuxDeployNode() $1=repo
+#7. PullBuildNode() $1=repo
 #6. EchoEyeCatcher() $1=text to be echoed
 #5. CheckIfDollarExists() $1=error-message, $2=port or repo to be checked)
 #4. IsPortFree() $1=port
@@ -50,7 +50,7 @@ TmuxDeployNode()
 #7. PullBuildNode() $1=repo
 ##########################
 
-PullBuild()
+PullBuildNode()
 {
     CheckIfDollarExists "Repo-name is missing in 'PullBuildTmuxDeploy()'"  $1 || return 1;
     #$1 needs a repo-name

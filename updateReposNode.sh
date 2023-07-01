@@ -7,7 +7,8 @@
 #         script for automating CD of all npm/node repos        #
 #tasks:                                                         #
 #1. Loop over repo-names and ports                              #
-#2. Update and deploy them                                      #
+#2. Update them 						#
+#3. Deploy them   	                                        #
 #################################################################
 #
 
@@ -19,7 +20,8 @@ declare  -r ports=(3010 3011);
 for ((i=0; i<${#repos[@]}; i++))
 do
     echo "Now update ${repos[i]} on port ${ports[i]}";
-    PullBuildTmuxDeployNode ${repos[i]} ${ports[i]};
+    PullBuildNode ${repos[i]};
+    TmuxDeployNode ${repos[i]} ${ports[i]};
 done
 
 
