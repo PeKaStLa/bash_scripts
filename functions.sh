@@ -9,6 +9,7 @@
 #################################################
 #
 #
+#9. SendFileSNS() $1=filename
 #8. TmuxDeployNode() $1=repo, $2=port
 #7. PullBuildNode() $1=repo
 #6. EchoEyeCatcher() $1=text to be echoed
@@ -22,6 +23,19 @@
 ###############################################################################
 ###############################################################################
 ###############################################################################
+#9. SendFileSNS() $1=filename
+###############################
+
+SendFileSNS()
+{
+	CheckIfDollarExists "Filename is missing in 'SendFileSNS()'"  $1 || return 1;
+    	#$1 needs a repo-name
+	
+	message=$(< $1);
+        aws sns publish --topic-arn arn:aws:sns:eu-central-1:617485513502:send_files_for_archiv --message "$message";
+        echo "Datei $1 wurde in E-Mail gesendet.";
+}
+
 ###############################################################################
 #8. TmuxDeployNode() $1=repo, $2=port
 ######################################
