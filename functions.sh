@@ -8,40 +8,48 @@
 #               by Peter Stadler                #
 #################################################
 #
-#8. NpmRunBuild()
-#7. GitPull()
-#6. EchoEyeCatcher()
-#5. CheckIfDollar1Exists()
-#4. IsPortFree()
-#3. EchoPortFuser()
-#2. IsLocalRepoUpToDate()
+#
+#
+#7. PullBuildTmuxDeploy() $1=repo, $2=port
+#6. EchoEyeCatcher() $1=text to be echoed
+#5. CheckIfDollarExists() $1=error-message, $2=port or repo to be checked)
+#4. IsPortFree() $1=port
+#3. EchoPortFuser() $1=port
+#2. IsLocalRepoUpToDate() $1=repo-name
 #1. ExitIfCodeIsNot0()
 
 
 ###############################################################################
 ###############################################################################
-###############################################################################
-#8. NpmRunBuild()
-##################
+#7. PullBuildTmuxDeploy() $1=repo, $2=port
+##########################
 
-NpmRunBuild()
+PullBuildTmuxDeploy()
 {
-    CheckIfDollar1Exists $1 || return 1; #$1 needs a repo/project-name
-    /usr/bin/npm run --prefix /home/ec2-user/$1 build;
-}
+    CheckIfDollarExists "Repo-name is missing in 'PullBuildTmuxDeploy()'"  $1 || return 1;
+    #$1 needs a repo-name
+    CheckIfDollarExists "Port is missing in 'PullBuildTmuxDeploy()'"  $2 || return 1;
+    #$2 needs a port
 
-###############################################################################
-#7. GitPull()
-##############
-
-GitPull()
-{
-    CheckIfDollar1Exists $1 || return 1; #$1 needs a repo/project-name
+    #git pull 
     /usr/bin/git -C /home/ec2-user/$1 pull;
+    #npm run build
+    /usr/bin/npm run --prefix /home/ec2-user/$1 build;
+    #tmux kills old session
+    /usr/bin/tmux kill-session -t $1;
+    #tmux new session
+    /usr/bin/tmux new-session -ds $1;
+    #tmux send deploy to session
+    tmux send -t $1 "PORT=$2 /usr/bin/node ~/$1/build/index.js" ENTER;
+    #sleep 2 and check for fuser am Port
+    sleep 2;
+    EchoPortFuser $2;
 }
 
 ###############################################################################
-#6. EchoEyeCatcher()
+
+###############################################################################
+#6. EchoEyeCatcher() $1=text to be echoed
 #####################
 
 EchoEyeCatcher()
@@ -51,26 +59,31 @@ EchoEyeCatcher()
 }
 
 ###############################################################################
-#5. CheckIfDollar1Exists()
-###########################
 
-CheckIfDollar1Exists()
+###############################################################################
+#5. CheckIfDollarExists() $1=error-message, $2=port or repo to be checked)
+############################
+
+CheckIfDollarExists()
 {
-    if [[ ! -z $1 ]] then
-        return 0; #yes, $1 exists
+    # takes $1 as error-message
+    # and $2 for check (e.g. Port or Repo)
+    if [[ ! -z $2 ]] then
+        return 0; #yes, $2 exists
     else
-        EchoEyeCatcher "ERROR - Dollar 1 doesnt exist! $1";
-        return 1; #no, $1 doesnt exist
+        EchoEyeCatcher "$1";
+        return 1; #no, $2 doesnt exist
     fi
 }
 
 ###############################################################################
-#4. IsPortFree()
+#4. IsPortFree() $1=port
 #################
 
 IsPortFree()
 {
-    CheckIfDollar1Exists $1 || return 1; #$1 needed a port
+    CheckIfDollarExists "Port is missing in 'IsPortFree()'" $1 || return 1;
+    #$1 needed a port
     fuser=$(/usr/sbin/fuser $1/tcp); #check if port is used by a process
     if [[ -z $fuser ]] then
         return 0; #yes, port is free because fuser output is empty
@@ -80,23 +93,25 @@ IsPortFree()
 }
 
 ###############################################################################
-#3. EchoPortFuser()
+#3. EchoPortFuser() $1=port
 ####################
 
 EchoPortFuser()
 {
-    CheckIfDollar1Exists $1 || return 1; #$1 needed a port
+    CheckIfDollarExists "Port is missing in 'EchoPortFuser'" $1 || return 1;
+    #$1 needed a port
     fuser=$(/usr/sbin/fuser $1/tcp);
     echo $fuser;
 }
 
 ###############################################################################
-#2. IsLocalRepoUpToDate()
+#2. IsLocalRepoUpToDate() $1=repo-name
 ##############################
 
 IsLocalRepoUpToDate()
 {
-    CheckIfDollar1Exists $1 || return 1; #$1 needs a repo/project-name
+    CheckIfDollarExists "Repo-name is missing in 'IsLocalRepoUpToDate()'" $1 || return 1;
+    #$1 needs a repo/project-name
     git_local_hash=$(/usr/bin/git -C ~/$1 rev-parse HEAD);
     git_remote_hash=$(/usr/bin/git -C ~/$1 ls-remote --head | cut -f1);
 
@@ -123,7 +138,6 @@ ExitIfCodeIsNot0()
 }
 
 ###############################################################################
-#####
 
 
 
