@@ -2,10 +2,19 @@
 #
 #################################################
 #               functions.sh                    #
+#  essential functions to use in other scripts  #
+#						#
 #       This file shall not be executed.        #
 #       Only imported into other shell scripts. #
 #               29.06.2023 - 18:27              #
+#            last change: 02.07.2023            #
 #               by Peter Stadler                #
+#################################################
+#
+#Changelog:
+#02.07.2023 set 5.1 to DEPRECATED. new version is 5.2. change name to DoesDollarExist()
+#	    for better understanding and easier usage.
+#
 #################################################
 #
 #
@@ -15,7 +24,8 @@
 #8.  TmuxDeployNode() $1=repo, $2=port
 #7.  PullBuildNode() $1=repo
 #6.  EchoEyeCatcher() $1=text to be echoed
-#5.  CheckIfDollarExists() $1=error-message, $2=port or repo to be checked)
+#5.2 DoesDollarExist() $1=error-message, $2=var to be checked
+#5.1 !!! DEPRECATED !!! CheckIfDollarExists() $1=error-message, $2=port or repo to be checked)
 #4.  IsPortFree() $1=port
 #3.  EchoPortFuser() $1=port
 #2.  IsLocalRepoUpToDate() $1=repo-name
@@ -109,7 +119,24 @@ EchoEyeCatcher()
 }
 
 ###############################################################################
-#5. CheckIfDollarExists() $1=error-message, $2=port or repo to be checked
+#5.2. DoesDollarExist() $1=error-message, $2=var to be checked
+############################
+
+DoesDollarExist()
+{
+    # takes $1 as error-message
+    # and $2 to check it (e.g. Port or Repo or message)
+    if [[ ! -z $2 ]] then
+        return 0; #yes, $2 exists
+    else
+        EchoEyeCatcher "$1";
+        return 1; #no, $2 doesnt exist
+    fi
+}
+
+###############################################################################
+#DEPRECATED - REPLACE old 5.1 with new 5.2 in all scripts
+#5.1. CheckIfDollarExists() $1=error-message, $2=port or repo to be checked
 ############################
 
 CheckIfDollarExists()
