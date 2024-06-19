@@ -4,8 +4,6 @@
 #date
 
 
-
-
 if [[ $1 = "status" ]] && [[ ! $2 = "stopped" ]] && [[ ! $2 = "running" ]] && [[ ! -z $2 ]];
 then	
 	echo "Show status of instance: $2 now:"
