@@ -54,13 +54,13 @@ fi
 
 if [[ $1 = "status" ]] && [[ -z $2 ]];
 then
-	echo "Show all instance-statuses now:"
-	output_all_statuse=$(aws ec2 describe-instance-status | jq -r '.InstanceStatuses.[] | "\(.InstanceId) is \(.InstanceState.Name)"')
+	echo "List all instance-statuses now:"
+	output_all_statuse=$(aws ec2 describe-instances | jq -r '.Reservations[].Instances[]  | "\(.InstanceId) is \(.State.Name)"')
 	if [[ ! -z $output_all_statuse ]]; 
 	then
 		echo "$output_all_statuse"
 	else
-		echo "No instances are running."
+		echo "No instances to list."
 	fi
 fi
 
