@@ -5,6 +5,8 @@ if [[ $1 = "start" ]] && [[ ! -z $2 ]];
 then	
 	echo "Start instance: $2 now:"
 	aws ec2 start-instances --instance-ids $2 
+	# todo1: start multiple instances with ne cmd 
+	# todo2: wait for all instances to fully run
 fi
 
 
