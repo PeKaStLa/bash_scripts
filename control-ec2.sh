@@ -1,8 +1,4 @@
 #!/bin/bash
-#
-#echo start
-#date
-
 
 
 if [[ $1 = "start" ]] && [[ ! -z $2 ]];
@@ -47,7 +43,6 @@ if [[ $1 = "stop" ]] && [[ -z $2 ]]; then
 fi
 
 
-
 if [[ $1 = "status" ]] && [[ -z $2 ]];
 then
 	echo "Show all instance-statuses now:"
@@ -60,11 +55,13 @@ then
 	fi
 fi
 
+
 if [[ $1 = "status" ]] && [[ ! $2 = "stopped" ]] && [[ ! $2 = "running" ]] && [[ ! -z $2 ]];
 then	
 	echo "Show status of instance: $2 now:"
 	aws ec2 describe-instance-status --instance-ids $2  | jq -r '.InstanceStatuses.[].InstanceState.Name '
 fi
+
 
 if [[ $1 = "status" ]] && [[ $2 = "stopped" ]];
 then
@@ -77,6 +74,7 @@ then
 		echo "No instances are stopped."
 	fi
 fi
+
 
 if [[ $1 = "status" ]] && [[ $2 = "running" ]];
 then 
@@ -94,16 +92,8 @@ fi
 # empty Dollar1
 if [[ -z $1 ]];
 then
-	echo -e "Dollar1: $1 is empty. \nUsage: \ncontrol-ec2.sh ['status'|'start'|'stop'] ['stopped'|'running'|<instance-id>]"
-	echo -e "Examples: \ncontrol-ec2.sh status \ncontrol-ec2.sh status running \ncontrol-ec2.sh status i-059604ca3cf21bc80"
-	echo -e "control-ec2.sh start \ncontrol-ec2.sh stop"
+	echo -e "Usage: \ncontrol-ec2.sh ['status'|'start'|'stop'] ['stopped'|'running'|<instance-id>]"
+	echo -e "Examples: \ncontrol-ec2.sh status \ncontrol-ec2.sh status running"
+	echo -e "control-ec2.sh start \ncontrol-ec2.sh stop i-059604ca3cf21bc80"
 fi
 
-
-# wait for instances to be stopped: 
-# for id in ${ids[@]}; do
-#        aws ec2 wait instance-stopped --instance-ids $id;
-# done
-
-#echo end
-#date
