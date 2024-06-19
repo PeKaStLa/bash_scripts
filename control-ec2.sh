@@ -4,10 +4,18 @@
 #date
 
 
-if [[ $1 = "status" ]] && [[ ! $2 = "stopped" ]] && [[ ! $2 = "running" ]] && [[ ! -z $2 ]];
+
+if [[ $1 = "start" ]] && [[ ! -z $2 ]];
 then	
-	echo "Show status of instance: $2 now:"
-	aws ec2 describe-instance-status --instance-ids $2  | jq -r '.InstanceStatuses.[].InstanceState.Name '
+	echo "Start instance: $2 now:"
+	aws ec2 start-instances --instance-ids $2 
+fi
+
+
+if [[ $1 = "stop" ]] && [[ ! -z $2 ]];
+then	
+	echo "Stop instance: $2 now:"
+	aws ec2 stop-instances --instance-ids $2 
 fi
 
 
@@ -33,6 +41,7 @@ if [[ $1 = "stop" ]] && [[ -z $2 ]]; then
 		echo "No running instances to stop."
 	fi
 fi
+
 
 
 if [[ $1 = "status" ]] && [[ -z $2 ]];
@@ -78,7 +87,7 @@ then
 fi
 
 
-# Wildcard * empty Dollar1
+# empty Dollar1
 if [[ -z $1 ]];
 then
 	echo -e "Dollar1: $1 is empty. \nUsage: \ncontrol-ec2.sh ['status'|'start'|'stop'] ['stopped'|'running'|<instance-id>]"
