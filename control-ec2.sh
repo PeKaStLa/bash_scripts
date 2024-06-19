@@ -16,7 +16,7 @@ if [[ $1 = "start" ]] && [[ -z $2 ]]; then
 	if [[ ! -z $output_all_stopped_instances ]]; 
 	then
 		echo "Starting all instances now: $output_all_stopped_instances"
-		aws ec2 start-instances --instance-ids $output_all_stopped_instances; 
+		aws ec2 start-instances --instance-ids $output_all_stopped_instances 
 	else
 		echo "No stopped instances to start."
 	fi
@@ -28,7 +28,7 @@ if [[ $1 = "stop" ]] && [[ -z $2 ]]; then
 	if [[ ! -z $output_all_running_instances ]]; 
 	then
 		echo "Stopping all instances now: $output_all_running_instances"
-		aws ec2 stop-instances --instance-ids $output_all_running_instances; 
+		aws ec2 stop-instances --instance-ids $output_all_running_instances
 	else
 		echo "No running instances to stop."
 	fi
