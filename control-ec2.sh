@@ -1,21 +1,26 @@
 #!/bin/bash
 
 
-# todo1: start/stop multiple instances with one cmd 
-# todo2: wait for all instances to fully run/stop
+# todo1: Add list command to list all instance-ids.
+
+
 if [[ $1 = "start" ]] && [[ ! -z $2 ]];
 then	
-	echo "Start instance: $2 now:"
-	aws ec2 start-instances --instance-ids $2 
+	shift
+	echo "Start instances: $* now:"
+	aws ec2 start-instances --instance-ids $*
+	echo "Now waiting for instances to run:"
+	aws ec2 wait instance-running --instance-ids $* && echo "All Instances are running now." || echo "Something went wrong with the wait-cmd."
 fi
 
 
-# todo1: start/stop multiple instances with one cmd 
-# todo2: wait for all instances to fully run/stop
 if [[ $1 = "stop" ]] && [[ ! -z $2 ]];
 then	
-	echo "Stop instance: $2 now:"
-	aws ec2 stop-instances --instance-ids $2 
+	shift
+	echo "Stop instances: $* now:"
+	aws ec2 stop-instances --instance-ids $*
+	echo "Now waiting for instances to stop:"
+	aws ec2 wait instance-stopped --instance-ids $*  && echo "All Instances are stopped now." || echo "Something went wrong with the wait-cmd."
 fi
 
 
