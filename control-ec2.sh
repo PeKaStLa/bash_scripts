@@ -20,6 +20,7 @@ if [[ $1 = "start" ]] && [[ -z $2 ]]; then
 			ids_to_start+=( $( echo "$id" | tr -d '\r' | cat -v; ) )
 		done
 		echo "Starting all instances now:"
+		echo "${ids_to_start[@]}"
 		aws ec2 start-instances --instance-ids $( echo "${ids_to_start[@]}" ); 
 	else
 		echo "No stopped instances to start."
@@ -36,6 +37,7 @@ if [[ $1 = "stop" ]] && [[ -z $2 ]]; then
 			ids_to_stop+=( $( echo "$id" | tr -d '\r' | cat -v; ) )
 		done
 		echo "Stopping all instances now:"
+		echo "${ids_to_stop[@]}"
 		aws ec2 stop-instances --instance-ids $( echo "${ids_to_stop[@]}" ); 
 	else
 		echo "No running instances to stop."
