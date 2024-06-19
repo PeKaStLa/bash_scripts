@@ -1,15 +1,17 @@
 #!/bin/bash
 
 
+# todo1: start/stop multiple instances with one cmd 
+# todo2: wait for all instances to fully run/stop
 if [[ $1 = "start" ]] && [[ ! -z $2 ]];
 then	
 	echo "Start instance: $2 now:"
 	aws ec2 start-instances --instance-ids $2 
-	# todo1: start multiple instances with ne cmd 
-	# todo2: wait for all instances to fully run
 fi
 
 
+# todo1: start/stop multiple instances with one cmd 
+# todo2: wait for all instances to fully run/stop
 if [[ $1 = "stop" ]] && [[ ! -z $2 ]];
 then	
 	echo "Stop instance: $2 now:"
