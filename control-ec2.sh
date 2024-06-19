@@ -12,16 +12,11 @@ fi
 
 
 if [[ $1 = "start" ]] && [[ -z $2 ]]; then
-	output_all_stopped_instances=$(aws ec2 describe-instances --filters Name=instance-state-name,Values=stopped | jq -r '.Reservations[].Instances[].InstanceId')
+	output_all_stopped_instances=$(aws ec2 describe-instances --filters Name=instance-state-name,Values=stopped | jq -r '.Reservations[].Instances[].InstanceId' | tr '\n' ' ' | tr -d '\r' | cat -v)
 	if [[ ! -z $output_all_stopped_instances ]]; 
 	then
-		for id in "$output_all_stopped_instances"; 
-		do
-			ids_to_start+=( $( echo "$id" | tr -d '\r' | cat -v; ) )
-		done
-		echo "Starting all instances now:"
-		echo "${ids_to_start[@]}"
-		aws ec2 start-instances --instance-ids $( echo "${ids_to_start[@]}" ); 
+		echo "Starting all instances now: $output_all_stopped_instances"
+		aws ec2 start-instances --instance-ids $output_all_stopped_instances; 
 	else
 		echo "No stopped instances to start."
 	fi
@@ -29,16 +24,11 @@ fi
 
 
 if [[ $1 = "stop" ]] && [[ -z $2 ]]; then
-	output_all_running_instances=$(aws ec2 describe-instances --filters Name=instance-state-name,Values=running | jq -r '.Reservations[].Instances[].InstanceId')
+	output_all_running_instances=$(aws ec2 describe-instances --filters Name=instance-state-name,Values=running | jq -r '.Reservations[].Instances[].InstanceId' | tr '\n' ' ' | tr -d '\r' | cat -v)
 	if [[ ! -z $output_all_running_instances ]]; 
 	then
-		for id in "$output_all_running_instances"; 
-		do 
-			ids_to_stop+=( $( echo "$id" | tr -d '\r' | cat -v; ) )
-		done
-		echo "Stopping all instances now:"
-		echo "${ids_to_stop[@]}"
-		aws ec2 stop-instances --instance-ids $( echo "${ids_to_stop[@]}" ); 
+		echo "Stopping all instances now: $output_all_running_instances"
+		aws ec2 stop-instances --instance-ids $output_all_running_instances; 
 	else
 		echo "No running instances to stop."
 	fi
