@@ -1,9 +1,6 @@
 #!/bin/bash
 
 
-# todo1: Add list command to list all instance-ids.
-
-
 if [[ $1 = "start" ]] && [[ ! -z $2 ]];
 then	
 	shift
