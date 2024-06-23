@@ -9,7 +9,7 @@
 #1. send message in mail via SNS                                #
 #################################################################
 #
-source ~/scripts/functions.sh;
+source functions.sh;
 
 DoesDollarExist "Dollar 1 is missing in messageSNS.sh" $1 || exit;
 

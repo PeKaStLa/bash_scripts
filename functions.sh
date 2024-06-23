@@ -126,7 +126,8 @@ DoesDollarExist()
 {
     # takes $1 as error-message
     # and $2 to check it (e.g. Port or Repo or message)
-    if [[ ! -z $2 ]] then
+    if [[ ! -z $2 ]];
+    then
         return 0; #yes, $2 exists
     else
         EchoEyeCatcher "$1";
@@ -143,7 +144,8 @@ CheckIfDollarExists()
 {
     # takes $1 as error-message
     # and $2 for check (e.g. Port or Repo)
-    if [[ ! -z $2 ]] then
+    if [[ ! -z $2 ]];
+    then
         return 0; #yes, $2 exists
     else
         EchoEyeCatcher "$1";
@@ -160,9 +162,11 @@ IsPortFree()
     CheckIfDollarExists "Port is missing in 'IsPortFree()'" $1 || return 1;
     #$1 needed a port
     fuser=$(/usr/sbin/fuser $1/tcp); #check if port is used by a process
-    if [[ -z $fuser ]] then
+    if [[ -z $fuser ]];
+    then
         return 0; #yes, port is free because fuser output is empty
-    elif [[ ! -z $fuser ]] then
+    elif [[ ! -z $fuser ]];
+    then
         return 1; #no, port is not free because fuser output is not empty
     fi
 }
@@ -190,7 +194,8 @@ IsLocalRepoUpToDate()
     git_local_hash=$(/usr/bin/git -C ~/$1 rev-parse HEAD);
     git_remote_hash=$(/usr/bin/git -C ~/$1 ls-remote --head | cut -f1);
 
-    if [[ $git_local_hash = $git_remote_hash ]] then
+    if [[ $git_local_hash = $git_remote_hash ]];
+    then
         return 0; #yes, local and remote the same. local commit is up-to-date
     else
         return 1; #no, local repo is behind.
@@ -203,7 +208,8 @@ IsLocalRepoUpToDate()
 
 ExitIfCodeIsNot0()
 {
-    if [[ "$?" -eq 0 ]] then
+    if [[ "$?" -eq 0 ]];
+    then
         echo "Exit code is 0, good :)";
         return 0; #yes, last command worked
     else
